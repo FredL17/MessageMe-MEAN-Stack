@@ -55,6 +55,11 @@ export class PostsService {
         this.http.put<{message: string}>(`http://localhost:3000/api/post/${post.id}`, postToUpdate)
         .subscribe(response => {
             console.log(response);
+            const updatedPosts = [...this.posts];
+            const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
+            updatedPosts[oldPostIndex] = post;
+            this.posts = updatedPosts;
+            this.postsUpdated.next([...this.posts]);
         });
     }
 
