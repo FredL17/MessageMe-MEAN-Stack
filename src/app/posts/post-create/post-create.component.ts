@@ -2,7 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { Post } from '../../models/post.model';
 import { FormGroup, FormControl, Validator, Validators } from '@angular/forms';
 import { PostsService } from 'src/app/services/posts.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { mimeType } from './mime-type.validator';
 
 @Component({
@@ -15,11 +15,11 @@ export class PostCreateComponent implements OnInit {
   private mode = 'create';
   private postId: string;
   imagePreview: string;
-  post: Post = {id: "#", title: "", content: ""};
+  post: Post = {id: "#", title: "", content: "", imagePath: null};
   form: FormGroup;
 
 
-  constructor(public postsService: PostsService, private route: ActivatedRoute) {}
+  constructor(public postsService: PostsService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -49,17 +49,18 @@ export class PostCreateComponent implements OnInit {
       return;
     }
     if(this.mode === 'create') {
-      const post: Post = {id: "#", title: this.form.value.title, content: this.form.value.content};
+      const post: Post = {id: "#", title: this.form.value.title, content: this.form.value.content, imagePath: null};
       console.log(post);
       this.postsService.addPost(post, this.form.value.image);
     }
     else if(this.mode === 'edit') {
-      const post: Post = {id: this.postId, title: this.form.value.title, content: this.form.value.content};
+      const post: Post = {id: this.postId, title: this.form.value.title, content: this.form.value.content, imagePath: null};
       console.log(post);
       this.postsService.updatePost(post);
     }
     
     this.form.reset();
+    this.router.navigate(['/']);
   }
 
   onImagePicked(event: Event) {

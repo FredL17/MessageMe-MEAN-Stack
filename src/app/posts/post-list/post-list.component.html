@@ -1,12 +1,17 @@
-<mat-accordion>
+<div class="post-list">
+    <mat-accordion>
     <mat-expansion-panel *ngFor="let post of posts">
         <mat-expansion-panel-header>
             {{post.title}}
         </mat-expansion-panel-header>
         <p>{{post.content}}</p>
+        <div>
+            <img [src]="post.imagePath" alt="image not found.">
+        </div>
         <mat-action-row>
             <a mat-button color="accent" [routerLink]="['/edit', post.id]" routerLinkActive="router-link-active" >Edit</a>
             <button mat-button color="warn" (click)='deletePost(post.id)' >Delete</button>
         </mat-action-row>
     </mat-expansion-panel>
 </mat-accordion>
+</div>
