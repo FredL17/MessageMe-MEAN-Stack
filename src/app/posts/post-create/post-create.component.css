@@ -11,3 +11,13 @@ mat-card {
 #fileSelector {
     visibility: hidden;
 }
+
+.imgae-preview {
+    height: 5rem;
+    margin: 1rem 0;
+}
+
+#image {
+    width: 100px;
+    height: 100px;
+}

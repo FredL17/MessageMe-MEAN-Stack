@@ -4,13 +4,16 @@
             <input matInput placeholder="Title" type="text" formControlName="title">
             <mat-error *ngIf="form.get('title').invalid">Please enter a post title.</mat-error>
         </mat-form-field>
-            <mat-form-field>
-                <textarea placeholder="Enter your content here"  matInput name="content" cols="30" rows="10" formControlName="content"></textarea>
-                <mat-error *ngIf="form.get('content').invalid">Please enter some content.</mat-error>
+        <mat-form-field>
+            <textarea placeholder="Enter your content here"  matInput name="content" cols="30" rows="10" formControlName="content"></textarea>
+            <mat-error *ngIf="form.get('content').invalid">Please enter some content.</mat-error>
         </mat-form-field>
+        <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview">
+            <img id="image" [src]="imagePreview">
+        </div>
         <button mat-raised-button color="accent" type="submit">Post</button>
         <button mat-raised-button color="accent" type="button" (click)="fileSelector.click()">Upload Image</button>
-        <input type="file" #fileSelector id="fileSelector">
+        <input type="file" #fileSelector id="fileSelector" (change)="onImagePicked($event)">
 
     </form>
 </mat-card>

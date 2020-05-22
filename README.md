@@ -1,10 +1,14 @@
-# MessageMe
+# MessageMe (under development)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.4.
 
-## Development server
+## Development locally
+
+Run `npm install` to install all required dependencies.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+Run `node server.js` to start the node server. The server will start listening on `http://localhost:3000/`.
 
 ## Code scaffolding
 

@@ -1,10 +1,33 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const multer = require('multer');
 
 const Post = require('./models/post');
 
 const app = express();
+
+const MIME_TYPE_MAP = {
+    'image/png': 'png',
+    'image/jpeg': 'jpeg',
+    'image/jpg': 'jpg'
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const isValid = MIME_TYPE_MAP[file.mimetype];
+        let error = new Error("Invalid mime type");
+        if(isValid) {
+            error = null;
+        }
+        cb(null, "server/images");
+    },
+    filename: (req, file, cb) => {
+        const name = file.originalname.toLowerCase().split(' ').join('-');
+        const ext = MIME_TYPE_MAP[file.mimetype];
+        cb(null, name + '-' + Date.now() + '.' + ext);
+    },
+})
 
 mongoose.connect("mongodb+srv://Fred:Q1RhcvtEWVakoZuz@cluster0-goj9d.mongodb.net/MessageMe?retryWrites=true&w=majority", {
     useNewUrlParser: true,
@@ -28,7 +51,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.post('/api/posts', (req, res, next) => {
+app.post('/api/posts', multer({storage: storage}).single("image"), (req, res, next) => {
     const post = new Post({
         title: req.body.title,
         content: req.body.content
