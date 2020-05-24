@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { Post } from '../../models/post.model';
-import { FormGroup, FormControl, Validator, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from 'src/app/services/posts.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { mimeType } from './mime-type.validator';
@@ -34,7 +34,8 @@ export class PostCreateComponent implements OnInit {
         this.post = this.postsService.getPost(this.postId);
         this.form.setValue({
           title: this.post.title,
-          content: this.post.content
+          content: this.post.content,
+          image: this.post.imagePath
         })
 
       } else {
@@ -54,9 +55,9 @@ export class PostCreateComponent implements OnInit {
       this.postsService.addPost(post, this.form.value.image);
     }
     else if(this.mode === 'edit') {
-      const post: Post = {id: this.postId, title: this.form.value.title, content: this.form.value.content, imagePath: null};
+      const post: Post = {id: this.postId, title: this.form.value.title, content: this.form.value.content, imagePath: this.form.value.imagePath};
       console.log(post);
-      this.postsService.updatePost(post);
+      this.postsService.updatePost(post, this.form.value.image);
     }
     
     this.form.reset();

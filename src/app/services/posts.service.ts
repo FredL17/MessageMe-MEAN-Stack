@@ -1,9 +1,13 @@
-import { Post } from '../models/post.model';
+/* Angular modules */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+/* Rxjs modules */
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+/* Models */
+import { Post } from '../models/post.model';
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
@@ -59,14 +63,17 @@ export class PostsService {
         return {...this.posts.find(p => p.id === id)};
     }
 
-    updatePost(post: Post) {
-        const postToUpdate: Post = {id: post.id, title: post.title, content: post.content, imagePath: null};
-        this.http.put<{message: string}>(`http://localhost:3000/api/post/${post.id}`, postToUpdate)
+    updatePost(post: Post, image: File) {
+        const postData = new FormData();
+        postData.append("title", post.title);
+        postData.append("content", post.content);
+        postData.append("image", image, post.title);
+        this.http.put<{message: string, updatedPost: Post}>(`http://localhost:3000/api/post/${post.id}`, postData)
         .subscribe(response => {
             console.log(response);
             const updatedPosts = [...this.posts];
             const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
-            updatedPosts[oldPostIndex] = post;
+            updatedPosts[oldPostIndex] = response.updatedPost;
             this.posts = updatedPosts;
             this.postsUpdated.next([...this.posts]);
         });
