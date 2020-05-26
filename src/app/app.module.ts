@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './header/header.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostCreateComponent } from './posts/post-create/post-create.component';
+import { LoginComponent } from './auth/login/login.component';
 
 /* Angular Material */
 import { MatInputModule } from '@angular/material/input';
@@ -24,13 +25,15 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
     PostsComponent,
     HeaderComponent,
     PostListComponent,
-    PostCreateComponent
+    PostCreateComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +41,7 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    FormsModule,
     MatInputModule,
     MatMenuModule,
     MatButtonModule,
