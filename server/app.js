@@ -78,11 +78,28 @@ app.post('/api/posts', multer({storage: storage}).single("image"), (req, res, ne
 
 /* Path for fetching all existing posts */
 app.get('/api/posts', (req, res, next) => {
-    Post.find().then(records => {
-        res.status(200).json({
-            posts: records
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const postQuery = Post.find();
+    let fetchedPosts;
+    if(pageSize && currentPage) {
+        postQuery
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize);
+    }
+
+    postQuery
+        .then(records => {
+            fetchedPosts = records;
+            return Post.countDocuments();
+        })
+        .then(count => {
+            res.status(200).json({
+                message: "Posts fetched successfully.",
+                posts: fetchedPosts,
+                maxPosts: count
+            })
         });
-    });
 });
 
 /* Path for updating an existing post */

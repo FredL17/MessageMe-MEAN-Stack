@@ -12,26 +12,30 @@ import { Post } from '../models/post.model';
 @Injectable({providedIn: 'root'})
 export class PostsService {
     private posts: Post[] = [];
-    private postsUpdated = new Subject<Post[]>();
+    private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
 
     constructor(private http: HttpClient) { }
 
-    getPosts() {
-        this.http.get<{posts: any}>('http://localhost:3000/api/posts')
+    getPosts(postsPerPage: number, currentPage: number) {
+        const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
+        this.http.get<{message: string, posts: any, maxPosts: number}>('http://localhost:3000/api/posts')
         .pipe(map(postData => {
-            return postData.posts.map(post => {
-                return {
-                    title: post.title,
-                    content: post.content,
-                    id: post._id,
-                    imagePath: post.imagePath
-                }
-            })
+            return {
+                posts: postData.posts.map(post => {
+                    return {
+                        title: post.title,
+                        content: post.content,
+                        id: post._id,
+                        imagePath: post.imagePath
+                    }
+                }),
+                maxPosts: postData.maxPosts
+            }
         }))
         .subscribe((transformedPosts) => {
-            this.posts = transformedPosts;
+            this.posts = transformedPosts.posts;
             console.log(this.posts);
-            this.postsUpdated.next([...this.posts]);
+            this.postsUpdated.next({posts: [...this.posts], postCount: transformedPosts.maxPosts});
         });
     }
 
@@ -45,18 +49,7 @@ export class PostsService {
         postData.append("content", post.content);
         postData.append("image", image, post.title);
         this.http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
-        .subscribe(responseData => {
-            console.log(responseData.message);
-            const FetchedPost: Post = {
-                id: responseData.post.id,
-                title: post.title,
-                content: post.content,
-                imagePath: responseData.post.imagePath
-            }
-            console.log(FetchedPost);
-            this.posts.push(post);
-            this.postsUpdated.next([...this.posts]);
-        });
+        .subscribe();
     }
 
     getPost(id: string) {
@@ -69,23 +62,10 @@ export class PostsService {
         postData.append("content", post.content);
         postData.append("image", image, post.title);
         this.http.put<{message: string, updatedPost: Post}>(`http://localhost:3000/api/post/${post.id}`, postData)
-        .subscribe(response => {
-            console.log(response);
-            const updatedPosts = [...this.posts];
-            const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
-            updatedPosts[oldPostIndex] = response.updatedPost;
-            this.posts = updatedPosts;
-            this.postsUpdated.next([...this.posts]);
-        });
+        .subscribe();
     }
 
     deletePost(postId: string) {
-        this.http.delete<{message: string}>(`http://localhost:3000/api/post/${postId}`)
-        .subscribe(response => {
-            console.log(response);
-            const updatedPosts = this.posts.filter(post => post.id !== postId);
-            this.posts = updatedPosts;
-            this.postsUpdated.next([...this.posts]);
-        })
+        return this.http.delete<{message: string}>(`http://localhost:3000/api/post/${postId}`)
     }
 }
