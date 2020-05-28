@@ -6,3 +6,6 @@ mat-toolbar {
     font-size: 0.9rem;
 }
 
+.space {
+    flex: auto;
+}

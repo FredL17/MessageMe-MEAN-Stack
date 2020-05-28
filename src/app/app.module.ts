@@ -20,9 +20,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
+import { SignupComponent } from './auth/signup/signup.component';
 
 
 
@@ -33,7 +35,8 @@ import { AppRoutingModule } from './app-routing.module';
     HeaderComponent,
     PostListComponent,
     PostCreateComponent,
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +53,7 @@ import { AppRoutingModule } from './app-routing.module';
     MatExpansionModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatIconModule,
     FontAwesomeModule
   ],
   providers: [],
